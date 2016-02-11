@@ -18,7 +18,7 @@ parallelExecution in Test := false
 
 // See documentation in ProgFunBuild.scala
 projectDetailsMap := {
-val currentCourseId = "progfun-006"
+val currentCourseId = "progfun-005"
 val depsQuickcheck = Seq(
     "org.scalacheck" %% "scalacheck" % "1.12.1"
   )

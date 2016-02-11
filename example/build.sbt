@@ -65,7 +65,7 @@ fork := {
 
 // See documentation in ProgFunBuild.scala
 projectDetailsMap := {
-val currentCourseId = "progfun-006"
+val currentCourseId = "progfun-005"
 Map(
   "example" ->  ProjectDetails(
                   packageName = "example",
