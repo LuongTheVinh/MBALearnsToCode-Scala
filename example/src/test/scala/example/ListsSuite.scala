@@ -117,8 +117,17 @@ class ListsSuite extends FunSuite {
   test("sum of a few numbers") {
     assert(sum(List(1,2,0)) === 3)
   }
+
+  test("sum of empty list") {
+    assert(sum(List()) === 0)
+  }
   
   test("max of a few numbers") {
     assert(max(List(3, 7, 2)) === 7)
   }
+
+  test("max of empty list") {
+    assert(max(List()) === -1000000000)
+  }
+
 }
