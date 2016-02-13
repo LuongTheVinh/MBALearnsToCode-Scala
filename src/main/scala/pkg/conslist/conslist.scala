@@ -27,3 +27,17 @@ class Cons[T](val head: T, val tail: List[T]) extends List[T] {
 
   def singleton[T](elem: T) = new Cons[T](elem, new Nil[T])
 }
+
+
+// List function to generate a list
+object List {
+
+  def apply[T]() =
+    new Nil
+
+  def apply[T](x0: T) =
+    new Cons(x0, new Nil)
+
+  def apply[T](x0: T, x1: T): List[T] =
+    new Cons(x0, new Cons(x1, new Nil))
+}
