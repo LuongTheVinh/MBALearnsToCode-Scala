@@ -1,7 +1,7 @@
 package pkg
 
 
-import scala.math.{abs, signum}
+import math.{abs, signum}
 
 
 class Rational(x: Int, y: Int) {
