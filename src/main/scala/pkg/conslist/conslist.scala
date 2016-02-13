@@ -8,7 +8,9 @@ trait List[T] {
   def tail: List[T]
 
   def nth(n: Int): T =
-    if (n == 0) head else tail.nth(n - 1)
+    if (isEmpty) throw new IndexOutOfBoundsException
+      else if (n == 0) head
+      else tail.nth(n - 1)
 }
 
 
