@@ -19,6 +19,3 @@ project/plugins/project/
 # IntelliJ IDEA files
 *.iml
 .idea/
-
-# Jupyter checkpoints
-*ipynb_checkpoints*
