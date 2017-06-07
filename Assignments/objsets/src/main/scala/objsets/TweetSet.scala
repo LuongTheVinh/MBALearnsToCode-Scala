@@ -1,6 +1,5 @@
 package objsets
 
-import common._
 import TweetReader._
 
 /**
