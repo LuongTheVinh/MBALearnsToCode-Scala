@@ -3,7 +3,7 @@ package object forcomp {
 
   def loadDictionary = {
     val wordstream = Option {
-      getClass.getClassLoader.getResourceAsStream(dictionaryPath.mkString("/"))
+      getClass.getResourceAsStream(dictionaryPath.mkString("/"))
     } orElse {
       common.resourceAsStreamFromSrc(dictionaryPath)
     } getOrElse {

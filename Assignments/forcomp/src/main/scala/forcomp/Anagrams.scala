@@ -1,6 +1,5 @@
 package forcomp
 
-import common._
 
 object Anagrams {
 
