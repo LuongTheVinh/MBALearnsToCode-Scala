@@ -1,8 +1,8 @@
 package example
 
-import common._
 
 object Lists {
+
   /**
    * This method computes the sum of all elements in the list xs. There are
    * multiple techniques that can be used for implementing this method, and
@@ -23,16 +23,8 @@ object Lists {
    * @param xs A list of natural numbers
    * @return The sum of all elements in `xs`
    */
-  def sum(xs: List[Int]): Int = {
-
-    def add(acc: Int, x_list: List[Int]): Int =
-      if (x_list.isEmpty) acc
-        else add(acc + x_list.head, x_list.tail)
-
-    add(0, xs)
-
-  } // xs.sum
-
+    def sum(xs: List[Int]): Int = ???
+  
   /**
    * This method returns the largest element in a list of integers. If the
    * list `xs` is empty it throws a `java.util.NoSuchElementException`.
@@ -46,18 +38,5 @@ object Lists {
    * @return The largest element in `xs`
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
-  def max(xs: List[Int]): Int = {
-
-    def take_max(acc: Int, x_list: List[Int]): Int =
-      if (x_list.isEmpty) acc
-      else {
-        val x = x_list.head
-        if (x >= acc) take_max(x, x_list.tail)
-          else take_max(acc, x_list.tail)
-      }
-
-    take_max(-1000000000, xs)
-
-  } // xs.max
-
-}
+    def max(xs: List[Int]): Int = ???
+  }
