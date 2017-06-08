@@ -1,17 +1,29 @@
-lazy val ScalaFuncProg_project = (project in file(".")).
-  settings(
+lazy val `ScalaFuncProg-project` =
+  (project in file("."))
+    .settings(
+      name := "ScalaFuncProg-project",
 
-    name := "ScalaFuncProg-project",
+      organization := "MBALearnsToCode",
 
-    organization := "MBALearnsToCode",
+      version := "1.0.2",
 
-    version := "1.0.2",
+      scalaVersion := "2.12.2",
 
-    scalaVersion := "2.11.7"
+      resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases",
 
-    // libraryDependencies ++= Seq(
-    //   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
-    //   "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"),
+      libraryDependencies ++= Seq(
+        // ScalaCheck
+        "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
 
-    // initialCommands := "import pkg._"
-  )
+        // Scalactic
+        "org.scalactic" %% "scalactic" % "3.0.1",
+
+        // ScalaTest
+        "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+
+        // SuperSafe
+        "com.artima.supersafe" %% "supersafe" % "1.1.2"
+      ),
+
+      initialCommands := "import pkg._"
+    )
