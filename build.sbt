@@ -7,7 +7,7 @@ lazy val `ScalaFuncProg-project` =
 
       version := "1.0.2",
 
-      scalaVersion := "2.12.2",
+      scalaVersion := "2.11.11",
 
       resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases",
 
@@ -22,7 +22,7 @@ lazy val `ScalaFuncProg-project` =
         "org.scalatest" %% "scalatest" % "3.0.1" % "test",
 
         // SuperSafe
-        "com.artima.supersafe" %% "supersafe" % "1.1.2"
+        "com.artima.supersafe" % "supersafe_2.11.7" % "1.1.2"
       ),
 
       initialCommands := "import pkg._"
