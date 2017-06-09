@@ -12,27 +12,26 @@ class Rational(x: Int, y: Int) {
     "Denominator must be non-zero!")
 
   /** define another class constructor with just Numerator,
-        assuming Denominator is 1.0 */
+    assuming Denominator is 1 */
   def this(x: Int) =
     this(x, 1)
 
   // define function to calculate Greatest Common Divisor
-  private def greatestCommonDiv(a: Int, b: Int): Int =
-    if (b == 0) abs(a) else greatestCommonDiv(b, a % b)
+  private def gcd(a: Int, b: Int): Int =
+    if (b == 0) abs(a) else gcd(b, a % b)
 
   // calculate Greatest Common Divisor
-  private val g = greatestCommonDiv(x, y)
+  private val g = gcd(x, y)
 
   // get the sign of Denominator
-  private val s = signum(y)
+  private val sgn = signum(y)
 
   // define simplified Numerator & Denominator
-  val numerator = s * x / g
-  val denominator = s * y / g
+  val numer = sgn * x / g
+  val denom = sgn * y / g
 
   // define how to print the object
-  override def toString = numerator + "/" + denominator
-
+  override def toString = numer + "/" + denom
 
   // define unary operations
   def pos =
@@ -43,21 +42,22 @@ class Rational(x: Int, y: Int) {
 
   def neg =
     new Rational(
-      - numerator,
-      denominator)
+      - numer,
+      denom
+    )
 
   def unary_- =
     neg
 
   def inv =
     new Rational(
-      denominator,
-      numerator)
-
+      denom,
+      numer
+    )
 
   // define binary operations
   def eq(that: Rational) =
-    numerator * that.denominator == denominator * that.numerator
+    numer * that.denom == denom * that.numer
 
   def ==(that: Rational) =
     eq(that)
@@ -69,7 +69,7 @@ class Rational(x: Int, y: Int) {
     ne(that)
 
   def gt(that: Rational) =
-    denominator * that.denominator * (that.denominator * numerator - denominator * that.numerator) > 0
+    denom * that.denom * (that.denom * numer - denom * that.numer) > 0
 
   def >(that: Rational) =
     gt(that)
@@ -100,8 +100,9 @@ class Rational(x: Int, y: Int) {
 
   def add(that: Rational) =
     new Rational(
-      that.denominator * numerator + denominator * that.numerator,
-      denominator * that.denominator)
+      that.denom * numer + denom * that.numer,
+      denom * that.denom
+    )
 
   def +(that: Rational) =
     add(that)
@@ -114,8 +115,9 @@ class Rational(x: Int, y: Int) {
 
   def mul(that: Rational) =
     new Rational(
-      numerator * that.numerator,
-      denominator * that.denominator)
+      numer * that.numer,
+      denom * that.denom
+    )
 
   def *(that: Rational) =
     mul(that)

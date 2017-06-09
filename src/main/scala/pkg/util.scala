@@ -35,4 +35,22 @@ object util {
 
     loop(acc = 1, m = n)
   }
+
+
+  def rangeMapRed
+        (map: Int => Long,
+         red: (Long, Long) => Long = (x, y) => x + y,
+         zero: Int = 0)
+        (a: Int,
+         b: Int): Long = {
+    @tailrec
+    def loop(soFar: Long, a: Int): Long =
+      if (a > b)
+        soFar
+
+      else
+        loop(soFar = red(map(a), soFar), a = a + 1)
+
+    loop(soFar = zero, a = a)
+  }
 }
