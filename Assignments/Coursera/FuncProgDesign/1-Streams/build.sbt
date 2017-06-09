@@ -1,103 +1,56 @@
-submitProjectName := "streams"
+name := course.value + "-" + assignment.value
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.7"
 
-scalacOptions ++= Seq(
-  "-deprecation",
-  "-unchecked",
-  "-optimise",
-  "-Yinline-warnings"
-)
+scalacOptions ++= Seq("-deprecation")
 
-fork := true
+// grading libraries
+libraryDependencies += "junit" % "junit" % "4.10" % "test"
+libraryDependencies ++= assignmentsMap.value.values.flatMap(_.dependencies).toSeq
 
-javaOptions += "-Xmx2G"
+// include the common dir
+commonSourcePackages += "common"
 
-parallelExecution in Test := false
+courseId := "PeZYFz-zEeWB_AoW1KYI4Q"
 
+val depsQuickcheck = Seq("org.scalacheck" %% "scalacheck" % "1.12.1")
 
-// See documentation in ProgFunBuild.scala
-projectDetailsMap := {
-val currentCourseId = "progfun-005"
-val depsQuickcheck = Seq(
-    "org.scalacheck" %% "scalacheck" % "1.12.1"
+assignmentsMap := {
+  val styleSheetPath = (baseDirectory.value / ".." / ".." / "project" / "scalastyle_config.xml").getPath
+  Map(
+    "example" -> Assignment(
+      packageName = "example",
+      key = "lLkU5d7xEeWGkg7lknKHZw",
+      itemId = "AYDPu",
+      partId = "5QFuy",
+      maxScore = 10d,
+      styleScoreRatio = 0.2,
+      styleSheet = styleSheetPath),
+    "streams" -> Assignment(
+      packageName = "streams",
+      key = "2iZL1kBCEeWwdxI8PoEnkw",
+      itemId = "Sh2dW",
+      partId = "EKNhX",
+      maxScore = 10d,
+      styleScoreRatio = 0.2,
+      styleSheet = styleSheetPath,
+      options = Map("grader-timeout" -> "1800", "Xms" -> "512m", "Xmx" -> "512m", "totalTimeout" -> "1500", "individualTimeout" -> "600")),
+    "quickcheck" -> Assignment(
+      packageName = "quickcheck",
+      key = "l86W1kt6EeWKvAo5SY6hHw",
+      itemId = "DF4y7",
+      partId = "DZTNG",
+      maxScore = 10d,
+      styleScoreRatio = 0.2,
+      styleSheet = styleSheetPath,
+      dependencies = depsQuickcheck),
+    "calculator" -> Assignment(
+      packageName = "calculator",
+      key = "QWry5Q33EeaVNg5usvFqrw",
+      itemId = "sO8Cf",
+      partId = "9eOy7",
+      maxScore = 10d,
+      styleScoreRatio = 0.2,
+      styleSheet = (baseDirectory.value / "scalastyle" / "calculator.xml").getPath )
   )
-Map(
-  "example" ->  ProjectDetails(
-                  packageName = "example",
-                  assignmentPartId = "gTzFogNk",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "recfun" ->     ProjectDetails(
-                  packageName = "recfun",
-                  assignmentPartId = "4Rarn9Ki",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "funsets" ->    ProjectDetails(
-                  packageName = "funsets",
-                  assignmentPartId = "gBXOL7Rd",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "objsets" ->    ProjectDetails(
-                  packageName = "objsets",
-                  assignmentPartId = "25dMMEz7",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "patmat" ->     ProjectDetails(
-                  packageName = "patmat",
-                  assignmentPartId = "6gPmpcif",
-                  maxScore = 20d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "forcomp" ->    ProjectDetails(
-                  packageName = "forcomp",
-                  assignmentPartId = "gG3oZGIO",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "streams" ->    ProjectDetails(
-                  packageName = "streams",
-                  assignmentPartId = "1WKgCFCi",
-                  maxScore = 20d,
-                  styleScoreRatio = 0.2,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "quickcheck" -> ProjectDetails(
-                  packageName = "quickcheck",
-                  assignmentPartId = "02Vi5q7m",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.0,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId,
-                  dependencies=depsQuickcheck),
-  "constraints"  -> ProjectDetails(
-                  packageName = "constraints",
-                  assignmentPartId = "kL1K2FAj",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.0,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId),
-  "interpreter"  -> ProjectDetails(
-                  packageName = "interpreter",
-                  assignmentPartId = "1SZhe1Ua283r87a7rd",
-                  maxScore = 10d,
-                  styleScoreRatio = 0.0,
-                  styleSheet = (baseDirectory.value / "project" / "scalastyle_config.xml").toString,
-                  courseId=currentCourseId)
-)}
-
-// Instrumentation
-instrumentedClassPrefixes ++= Seq(
-  "patmat",
-  "forcomp"
-)
+}
