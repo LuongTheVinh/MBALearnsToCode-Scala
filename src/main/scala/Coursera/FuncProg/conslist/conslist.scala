@@ -1,7 +1,11 @@
 package Coursera.FuncProg.conslist
 
 
-trait List[+T] {   // "+" sign to make List type co-variant
+trait List[+T] {
+  // '+' sign to make List type co-variant (sub-typing & super-typing follows T),
+  // '-' means contra-variant
+  // no '+' nor '-' means non-variant
+
   def isEmpty: Boolean
 
   def head: T
@@ -18,7 +22,7 @@ trait List[+T] {   // "+" sign to make List type co-variant
     else
       tail(n - 1)
 
-  def prepend[U >: T](elem: U): List[U] =   // >: means resolvable down to T
+  def prepend[U >: T](elem: U): List[U] =   // >: T is lower bound / sub-type of U; U is super-type
     new Cons(elem, this)
 }
 
