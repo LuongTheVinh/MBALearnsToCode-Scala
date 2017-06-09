@@ -31,7 +31,7 @@ object TweetReader {
   }
 
   def toTweetSet(l: List[Tweet]): TweetSet = {
-    l.foldLeft(Empty: TweetSet)(_.incl(_))
+    l.foldLeft(new Empty: TweetSet)(_.incl(_))
   }
 
   def unparseToData(tws: List[Tweet]): String = {
@@ -75,5 +75,5 @@ object TweetReader {
     if (curSets.isEmpty) acc
     else unionOfAllTweetSets(curSets.tail, acc.union(curSets.head))
 
-  val allTweets: TweetSet = unionOfAllTweetSets(tweetSets, Empty)
+  val allTweets: TweetSet = unionOfAllTweetSets(tweetSets, new Empty)
 }

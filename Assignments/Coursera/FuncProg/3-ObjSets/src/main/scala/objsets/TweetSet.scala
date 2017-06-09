@@ -44,7 +44,7 @@ abstract class TweetSet {
    * and be implemented in the subclasses?
    */
   def filter(p: Tweet => Boolean): TweetSet =
-    filterAcc(p, Empty)
+    filterAcc(p, new Empty)
 
 
   /**
@@ -130,7 +130,7 @@ abstract class TweetSet {
 }
 
 
-object Empty extends TweetSet {
+class Empty extends TweetSet {
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet =
     acc
 
@@ -145,7 +145,7 @@ object Empty extends TweetSet {
     false
 
   def incl(tweet: Tweet): TweetSet =
-    new NonEmpty(tweet, Empty, Empty)
+    new NonEmpty(tweet, new Empty, new Empty)
 
   def remove(tweet: Tweet): TweetSet =
     this
