@@ -1,7 +1,7 @@
-lazy val `ScalaFuncProg-project` =
+lazy val `MBALearnsToCode-Scala` =
   (project in file("."))
     .settings(
-      name := "ScalaFuncProg-project",
+      name := "MBALearnsToCode-Scala",
 
       organization := "MBALearnsToCode",
 
