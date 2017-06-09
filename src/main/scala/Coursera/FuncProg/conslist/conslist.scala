@@ -1,4 +1,4 @@
-package pkg.conslist
+package Coursera.FuncProg.conslist
 
 
 trait List[+T] {   // "+" sign to make List type co-variant

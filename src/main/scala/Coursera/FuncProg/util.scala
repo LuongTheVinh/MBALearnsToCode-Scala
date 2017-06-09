@@ -1,4 +1,4 @@
-package pkg
+package Coursera.FuncProg
 
 
 import scala.annotation.tailrec

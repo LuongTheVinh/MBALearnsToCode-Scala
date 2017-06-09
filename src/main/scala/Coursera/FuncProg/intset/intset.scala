@@ -1,4 +1,4 @@
-package pkg.intset
+package Coursera.FuncProg.intset
 
 
 abstract class IntSet {
