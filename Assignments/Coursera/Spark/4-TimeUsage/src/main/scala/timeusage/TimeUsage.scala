@@ -84,7 +84,7 @@ object TimeUsage {
     * @param line Raw fields
     */
   def row(line: List[String]): Row =
-    Row(
+    Row.fromSeq(
       line.head ::
       line.tail.map(_.toDouble)
     )
