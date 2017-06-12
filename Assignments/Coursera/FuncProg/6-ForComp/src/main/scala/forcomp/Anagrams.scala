@@ -145,10 +145,16 @@ object Anagrams {
   def subtract(x: Occurrences, y: Occurrences): Occurrences = {
     val yMap = y.toMap
 
-    (for {(c, n) <- x
-          if yMap.getOrElse(c, 0) < n} yield
-      (c, n - yMap.getOrElse(c, 0)))
-      .sortBy(_._1)
+    val netOccs =
+      (for ((c, n) <- x) yield
+        (c, n - yMap.getOrElse(c, 0)))
+        .sortBy(_._1)
+
+    if (netOccs.exists(_._2 < 0))
+      List()
+
+    else
+      netOccs.filter(_._2 > 0)
   }
 
 
@@ -192,5 +198,47 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] =
+    if (sentence.isEmpty)
+      List(List())
+
+    else {
+      case class _OngoingSearch   // *** WHY CANNOT MAKE private ??? ***
+          (occurencesListSoFar: List[Occurrences],
+           occurencesRemain: Occurrences) {
+        final def search: List[List[Occurrences]] =
+          if (occurencesRemain.isEmpty)
+            this.occurencesListSoFar :: Nil
+
+          else
+            (for {occs <- combinations(occurrences = occurencesRemain)
+                 if occs.nonEmpty && (dictionaryByOccurrences contains occs)} yield
+              _OngoingSearch(
+                occurencesListSoFar = occs :: occurencesListSoFar,
+                occurencesRemain = subtract(occurencesRemain, occs)
+              ).search)
+              .flatten
+      }
+
+      val occsLists =
+        _OngoingSearch(
+            occurencesListSoFar = List(),
+            occurencesRemain = sentenceOccurrences(s = sentence)
+          ).search
+
+      (for (occsList <- occsLists) yield
+        occsList.foldLeft(List[Sentence]())(
+          (unfinishedSentences, occs) => {
+            val words = dictionaryByOccurrences(occs)
+
+            if (unfinishedSentences.isEmpty)
+              words.map(_ :: Nil)
+
+            else
+              for {unfinishedSentence <- unfinishedSentences
+                   word <- words} yield
+                word :: unfinishedSentence
+          }))
+        .flatten
+    }
 }
