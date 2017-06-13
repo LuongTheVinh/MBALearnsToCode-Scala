@@ -301,20 +301,13 @@ object TimeUsage {
     import org.apache.spark.sql.expressions.scalalang.typed
 
     summed
-      .groupByKey(
-        row =>
-          (row.working, row.sex, row.age)
-      ).mapGroups(
-        (keyTuple, groupedRows) =>
-          TimeUsageRow(
-            working = keyTuple._1,
-            sex = keyTuple._2,
-            age = keyTuple._3,
-            primaryNeeds = math.round(groupedRows.map(_.primaryNeeds).sum * 10.0 / groupedRows.size) / 10.0,
-            work = math.round(groupedRows.map(_.work).sum * 10.0 / groupedRows.size) / 10.0,
-            other = math.round(groupedRows.map(_.other).sum * 10.0 / groupedRows.size) / 10.0
-          )
+      .groupBy($"working", $"sex", $"age")
+      .agg(
+         round(avg($"primaryNeeds").as[Double], scale = 1).alias("primaryNeeds"),
+         round(avg($"work").as[Double], scale = 1).alias("work"),
+         round(avg($"other").as[Double], scale = 1).alias("other")
       ).orderBy("working", "sex", "age")
+      .as[TimeUsageRow]
   }
 }
 
