@@ -24,14 +24,22 @@ object TimeUsage {
   /** Main function */
   def main(args: Array[String]): Unit = {
     timeUsageByLifePeriod()
+
+    spark.stop()
   }
 
   def timeUsageByLifePeriod(): Unit = {
     val (columns, initDf) = read("/timeusage/atussum.csv")
     val (primaryNeedsColumns, workColumns, otherColumns) = classifiedColumns(columns)
-    val summaryDf = timeUsageSummary(primaryNeedsColumns, workColumns, otherColumns, initDf)
-    val finalDf = timeUsageGrouped(summaryDf)
-    finalDf.show()
+
+    val summaryDf = timeUsageSummary(primaryNeedsColumns, workColumns, otherColumns, initDf).cache()
+    summaryDf.show()
+    timeUsageGrouped(summaryDf).show()
+    timeUsageGroupedSql(summaryDf).show()
+
+    val ds = timeUsageSummaryTyped(summaryDf)
+    ds.show()
+    timeUsageGroupedTyped(ds).show()
   }
 
   /** @return The read DataFrame along with its column names. */
@@ -176,15 +184,15 @@ object TimeUsage {
                    END AS age""")
 
     val primaryNeedsProjection: Column =
-      (primaryNeedsColumns.reduce(_ + _) / 60)
+      (primaryNeedsColumns.reduce(_ + _) / 60.0)
         .alias("primaryNeeds")
 
     val workProjection: Column =
-      (workColumns.reduce(_ + _) / 60)
+      (workColumns.reduce(_ + _) / 60.0)
         .alias("work")
 
     val otherProjection: Column =
-      (otherColumns.reduce(_ + _) / 60)
+      (otherColumns.reduce(_ + _) / 60.0)
         .alias("other")
 
     df
@@ -215,9 +223,9 @@ object TimeUsage {
       $"sex",
       $"age"
     ).agg(
-      round(avg($"primaryNeeds")).alias("primaryNeeds"),
-      round(avg($"work")).alias("work"),
-      round(avg($"other")).alias("other")
+      round(avg($"primaryNeeds"), scale = 1).alias("primaryNeeds"),
+      round(avg($"work"), scale = 1).alias("work"),
+      round(avg($"other"), scale = 1).alias("other")
     ).orderBy(
       $"working",
       $"sex",
@@ -243,9 +251,9 @@ object TimeUsage {
        |  working,
        |  sex,
        |  age,
-       |  ROUND(AVERAGE(primaryNeeds)) AS primaryNeeds,
-       |  ROUND(AVERAGE(work)) AS work,
-       |  ROUND(AVERAGE(other)) AS other
+       |  ROUND(AVG(primaryNeeds), 1) AS primaryNeeds,
+       |  ROUND(AVG(work), 1) AS work,
+       |  ROUND(AVG(other), 1) AS other
        |FROM
        |  $viewName
        |GROUP BY
@@ -265,7 +273,18 @@ object TimeUsage {
     * cast them at the same time.
     */
   def timeUsageSummaryTyped(timeUsageSummaryDf: DataFrame): Dataset[TimeUsageRow] =
-    ???
+    timeUsageSummaryDf
+      .map(
+        row =>
+          TimeUsageRow(
+            working = row.getAs[String]("working"),
+            sex = row.getAs[String]("sex"),
+            age = row.getAs[String]("age"),
+            primaryNeeds = row.getAs[Double]("primaryNeeds"),
+            work = row.getAs[Double]("work"),
+            other = row.getAs[Double]("other")
+          )
+      ).as[TimeUsageRow]
 
   /**
     * @return Same as `timeUsageGrouped`, but using the typed API when possible
@@ -280,9 +299,25 @@ object TimeUsage {
     */
   def timeUsageGroupedTyped(summed: Dataset[TimeUsageRow]): Dataset[TimeUsageRow] = {
     import org.apache.spark.sql.expressions.scalalang.typed
-    ???
+
+    summed
+      .groupByKey(
+        row =>
+          (row.working, row.sex, row.age)
+      ).mapGroups(
+        (keyTuple, groupedRows) =>
+          TimeUsageRow(
+            working = keyTuple._1,
+            sex = keyTuple._2,
+            age = keyTuple._3,
+            primaryNeeds = math.round(groupedRows.map(_.primaryNeeds).sum * 10.0 / groupedRows.size) / 10.0,
+            work = math.round(groupedRows.map(_.work).sum * 10.0 / groupedRows.size) / 10.0,
+            other = math.round(groupedRows.map(_.other).sum * 10.0 / groupedRows.size) / 10.0
+          )
+      ).orderBy("working", "sex", "age")
   }
 }
+
 
 /**
   * Models a row of the summarized data set
