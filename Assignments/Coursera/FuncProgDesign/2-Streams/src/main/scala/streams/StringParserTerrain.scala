@@ -75,12 +75,12 @@ trait StringParserTerrain extends GameDef {
     var found = row(colNum) == c
 
     while (!found) {
-      while ((!found) && (colNum < nCols)) {
+      while ((!found) && (colNum < nCols - 1)) {
         colNum += 1
         found = row(colNum) == c
       }
 
-      if ((!found) && (colNum == nCols)) {
+      if ((!found) && (colNum == nCols - 1)) {
         rowNum += 1
         row = levelVector(rowNum)
         colNum = 0
